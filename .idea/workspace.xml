@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c262c659-2f13-4076-80a1-c5b950eaff21" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/lecture1.sc" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/lista0.sc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/scala_settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/scala_settings.xml" afterDir="false" />
+    <list default="true" id="c262c659-2f13-4076-80a1-c5b950eaff21" name="Changes" comment="lecture 1">
+      <change afterPath="$PROJECT_DIR$/src/Exercises/DescendingOrder.sc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Exercises/LowIntSum.sc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Exercises/SplitStrings.sc" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/lista1.sc" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -49,11 +50,12 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "WebServerToolWindowFactoryState": "false",
     "go.import.settings.migrated": "true",
+    "last_opened_file_path": "/home/kamilasproska/IdeaProjects/ScalaExercises",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "scala_project_settings_configurable.last_selected_tab_index": "3",
+    "scala_project_settings_configurable.last_selected_tab_index": "7",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.scala.settings.ScalaProjectSettingsConfigurable",
     "vue.rearranger.settings.migration": "true"
   }
@@ -91,7 +93,20 @@
       <updated>1677694092995</updated>
       <workItem from="1677694094722" duration="1799000" />
       <workItem from="1677696135111" duration="162000" />
+      <workItem from="1677696307504" duration="333000" />
+      <workItem from="1677696704581" duration="61000" />
+      <workItem from="1677940320878" duration="102000" />
+      <workItem from="1677940900978" duration="29000" />
+      <workItem from="1678032583632" duration="11656000" />
     </task>
+    <task id="LOCAL-00001" summary="lecture 1">
+      <created>1677696456755</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1677696456755</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -107,6 +122,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="lecture 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="lecture 1" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
