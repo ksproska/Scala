@@ -50,14 +50,18 @@ reverse(Nil) == List()
 // Zadanie 4
 val replicate = (xss :List[Int]) =>
   @tailrec
-  def replR(repetitionsLeft: Int, xssR: List[Int], acc: List[Int]): List[Int] =
-    xssR match
+  def replicateRec(repetitionsLeft: Int, xssInner: List[Int], acc: List[Int]): List[Int] =
+    xssInner match
       case Nil => acc
-      case h::t =>
-        if h > 0 && repetitionsLeft > 0 then replR(repetitionsLeft - 1, xssR, acc:::List(h))
-        else if t != Nil then replR(t.head, t, acc)
+      case h :: Nil =>
+        if repetitionsLeft > 0 then replicateRec(repetitionsLeft - 1, xssInner, acc ::: List(h))
         else acc
-  replR(1, xss, Nil)
+      case h :: t =>
+        if repetitionsLeft > 0 then replicateRec(repetitionsLeft - 1, xssInner, acc ::: List(h))
+        else replicateRec(t.head, t, acc)
+  xss match
+    case Nil => Nil
+    case h::_ => replicateRec(h, xss, Nil)
 
 
 replicate(List(1,0,4,-2,3)) == List(1, 4, 4, 4, 4, 3, 3, 3)
@@ -67,4 +71,21 @@ replicate(List(0)) == Nil
 replicate(List(1)) == List(1)
 replicate(Nil) == Nil
 
-// do zrobienia zad 4 i 5
+// Zadanie 5
+val root3 = (a: Double) =>
+  @tailrec
+  def root3R(x: Double): Double =
+    if math.abs(x * x * x - a) <= 1.0e-15 * math.abs(a) then x
+    else root3R(x + (a / (x * x) - x) / 3)
+  if a > 1 then root3R(a/3)
+  else root3R(a)
+
+math.abs(root3(0.01) - 0.21544346900319) <= 1.0e-5
+math.abs(root3(0.2) - 0.58480354764257) <= 1.0e-5
+root3(0) == 0
+root3(1) == 1
+math.abs(root3(2) - 1.2599210498949) <= 1.0e-5
+math.abs(root3(7) - 1.9129311827724) <= 1.0e-5
+root3(8) == 2
+root3(27) == 3
+math.abs(root3(97) - 4.594700892207) <= 1.0e-5
