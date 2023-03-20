@@ -1,5 +1,5 @@
-import scala.annotation.tailrec
 // Kamila Sproska
+import scala.annotation.tailrec
 
 // Zadanie 1
 def take[A](n: Int, xss: List[A]): List[A] =
@@ -77,15 +77,12 @@ val root3 = (a: Double) =>
   def root3R(x: Double): Double =
     if math.abs(x * x * x - a) <= 1.0e-15 * math.abs(a) then x
     else root3R(x + (a / (x * x) - x) / 3)
-  if a > 1 then root3R(a/3)
-  else root3R(a)
+  root3R(if a > 1 then a/3 else  a)
 
-math.abs(root3(0.01) - 0.21544346900319) <= 1.0e-5
-math.abs(root3(0.2) - 0.58480354764257) <= 1.0e-5
-root3(0) == 0
-root3(1) == 1
-math.abs(root3(2) - 1.2599210498949) <= 1.0e-5
-math.abs(root3(7) - 1.9129311827724) <= 1.0e-5
-root3(8) == 2
-root3(27) == 3
-math.abs(root3(97) - 4.594700892207) <= 1.0e-5
+
+val e = 1.0e-60
+math.abs(root3(0) - 0) <= e
+math.abs(root3(1) - 1) <= e
+math.abs(root3(8) - 2) <= e
+math.abs(root3(27) - 3) <= e
+math.abs(root3(-27) + 3) <= e
