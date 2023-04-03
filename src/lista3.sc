@@ -89,8 +89,8 @@ def splitAt[A](xs: List[A])(n: Int): (List[A], List[A]) =
   @tailrec
   def splitRec(l1: List[A], l2: List[A], count: Int): (List[A], List[A]) =
     l2 match
-      case Nil => (l1, l2)
-      case h::t => if count < n then splitRec(l1:::List(h), t, count + 1) else (l1, l2)
+      case Nil => (l1.reverse, l2)
+      case h::t => if count < n then splitRec(h::l1, t, count + 1) else (l1.reverse, l2)
 
   splitRec(Nil, xs, 0)
 
