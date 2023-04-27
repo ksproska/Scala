@@ -102,10 +102,15 @@ trzeciego stopnia z `a` wyliczając kolejne przybliżenia `x_i` tego pierwiastka
 Newtona-Raphsona):
 ```math
 x_0 = a/3 dla a > 1
+
 x_0 = a dla a ≤ 1
+
 x_i+1 = x_i + (a/x_i^2 – x_i)/3
 ```
-Dokładność (względna) jest osiągnięta, jeśli `|x_i^3 – a| <= ε * |a|`.
+Dokładność (względna) jest osiągnięta, jeśli 
+```math
+|x_i^3 – a| <= ε * |a|
+```
 Napisz efektywną (**wykorzystującą rekursję ogonową**) funkcję `root3: Double => Double`,
 która dla zadanej liczby `a` znajduje pierwiastek trzeciego stopnia z dokładnością względną `ε=10^-15`.
 
