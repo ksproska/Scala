@@ -101,17 +101,17 @@ Dla zadanej liczby rzeczywistej `a` oraz dokładności `ε` można znaleźć pie
 trzeciego stopnia z `a` wyliczając kolejne przybliżenia `x_i` tego pierwiastka (metoda
 Newtona-Raphsona):
 ```math
-x_0 = a/3 dla a > 1
+x_0 = \frac{a}{3} dla a > 1
 ```
 ```math
 x_0 = a dla a ≤ 1
 ```
 ```math
-x_i+1 = x_i + (a/x_i^2 – x_i)/3
+x_{i+1} = x_i + (\frac{a}{x_i^2} – x_i)/3
 ```
 Dokładność (względna) jest osiągnięta, jeśli 
 ```math
-|x_i^3 – a| <= ε * |a|
+|x_i^3 – a| ≤ ε * |a|
 ```
 Napisz efektywną (**wykorzystującą rekursję ogonową**) funkcję `root3: Double => Double`,
 która dla zadanej liczby `a` znajduje pierwiastek trzeciego stopnia z dokładnością względną `ε=10^-15`.
