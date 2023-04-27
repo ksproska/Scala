@@ -98,14 +98,19 @@ replicate (List(1,0,4,-2,3)) == List(1, 4, 4, 4, 4, 3, 3, 3)
 
 ### [Zad 5](/src/lista2.sc#L74)
 Dla zadanej liczby rzeczywistej `a` oraz dokładności `ε` można znaleźć pierwiastek
-trzeciego stopnia z `a` wyliczając kolejne przybliżenia `x_i` tego pierwiastka (metoda
+trzeciego stopnia z `a` wyliczając kolejne przybliżenia `xi` tego pierwiastka (metoda
 Newtona-Raphsona):
+
+dla `a > 1`:
 ```math
-x_0 = \frac{a}{3} dla a > 1
+x_0 = \frac{a}{3}
 ```
+
+dla `a ≤ 1`:
 ```math
-x_0 = a dla a ≤ 1
+x_0 = a
 ```
+
 ```math
 x_{i+1} = x_i + (\frac{a}{x_i^2} – x_i)/3
 ```
