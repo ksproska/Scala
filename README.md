@@ -123,14 +123,63 @@ która dla zadanej liczby `a` znajduje pierwiastek trzeciego stopnia z dokładno
 
 ## [Lista 3](/src/lista3.sc)
 ### [Zad 1](/src/lista3.sc#L3)
+Napisz funkcję `exists[A] (xs: List[A]) (p: A => Boolean): Boolean`.
+exists (xs) (p) ma wartość logiczną zdania `∃x∈xs.p(x)”`
+
+np. 
+```scala worksheet
+exists (List(5,1,2,3)) (_ == 2)
+```
+Należy napisać trzy wersje tej funkcji:\
+a) z wykorzystaniem dopasowania do wzorca i rekursji,\
+b) z wykorzystaniem metody `List.foldLeft`, \
+c) z wykorzystaniem metody `List.foldRight`.
+
 ### [Zad 2](/src/lista3.sc#L42)
+Napisz funkcję `filter[A](xs: List[A])(p: A => Boolean): List[A]` wykorzystując funkcjonał
+`List.foldRight`.
+np.
+```scala worksheet
+filter (List(2,7,1,3,7,8,4,1,6,9)) (_ > 3) == List(7, 7, 8, 4, 6, 9)
+```
+
 ### [Zad 3](/src/lista3.sc#L55)
+Napisz funkcję `remove1[A](xs: List[A])(p: A => Boolean): List[A]` zwracającą listę z tymi
+samymi wartościami, co lista `xs`, z której usunięto pierwszy element spełniający predykat `p`.
+
+np.
+```scala worksheet
+remove1(List(1,2,3,2,5)) (_ == 2) == List(1, 3, 2, 5)
+```
+Należy napisać dwie wersje tej funkcji: \
+a) ze zwykłą rekursją, \
+b) z możliwie efektywną rekursją ogonową (użyj `List.reverse_:::`).
+
 ### [Zad 4](/src/lista3.sc#L87)
+Napisz funkcję `splitAt[A](xs: List[A])(n: Int): (List[A], List[A])`, zwracającą parę równą
+`(xs take n, xs drop n)`, ale bez dwukrotnego przechodzenia listy `xs`.
+
+np.
+```scala worksheet
+splitAt (List('a','b','c','d','e')) (2) == (List('a', 'b'), List('c', 'd', 'e'))
+```
 
 ## [Lista 4](/src/lista4.sc)
+### [Zad 1](/src/lista4.sc#L3)
+### [Zad 2](/src/lista4.sc#L14)
+### [Zad 3](/src/lista4.sc#L70)
 
 ## [Lista 5](/src/lista5.sc)
+### [Zad 1](/src/lista5.sc#L3)
+### [Zad 2](/src/lista5.sc#L25)
+### [Zad 3](/src/lista5.sc#L37)
+### [Zad 4](/src/lista5.sc#L73)
+### [Zad 5](/src/lista5.sc#L83)
 
 ## [Lista 6](/src/lista6.sc)
+### [Zad 1](/src/lista6.sc#L4)
+### [Zad 2](/src/lista6.sc#L18)
+### [Zad 3](/src/lista6.sc#L35)
 
 ## [Lista 7](/src/lista7.scala)
+### [Zad 1](/src/lista7.scala#L3)
