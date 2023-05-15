@@ -21,6 +21,7 @@ object Zad1:
 // problem wynika z dostępu do zasobów, przykładowo oba wątki jednocześnie odczytują wartość n i potem zarówno pierwszy
 // jak i drugi zapisują wartość n+1, chociaż ostateczny wynik powinien być równy n+2
 
+
 // b
 object Zad1b:
   var counter = 0 // counter variable
@@ -39,6 +40,7 @@ object Zad1b:
     println(s"Value of the counter = $counter")
     println(s"Estimated time = ${estimatedTime}ms, Available processors = ${Runtime.getRuntime.availableProcessors}")
 
+
 // c
 object Zad1c:
   val semaphore = new Semaphore(1)
@@ -47,6 +49,7 @@ object Zad1c:
     semaphore.acquire
     counter += 1
     semaphore.release
+
   def main(args: Array[String]): Unit =
     val p = new Thread(() => for _ <- 0 until 200000 do readWriteCounter)
     val q = new Thread(() => for _ <- 0 until 200000 do readWriteCounter)
@@ -88,7 +91,7 @@ def periodically(duration: Long, times: Int)(block: => Unit): Unit =
       inner(times - 1)
 
   val thread = new Thread(() => inner(times))
-  thread.setDaemon(true) // czyli gdy się kończy program wątek jest przerwany
+  thread.setDaemon(true) // gdy się kończy program wątek jest przerwany
   thread.start
 
 object Zad3:

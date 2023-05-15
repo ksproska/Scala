@@ -67,19 +67,21 @@ object QueueMut {
 
 object lista8 {
   def main(args: Array[String]): Unit = {
-    val x = QueueMut(1, 2, 3)
-    println(x.isFull)
-    println(x.first == 1)
-    x.dequeue
-    println(!x.isFull)
-    println(!x.isEmpty)
-    println(x.first == 2)
-    x.dequeue
-    println(x.first == 3)
-    x.dequeue
-    println(x.isEmpty)
-    x.enqueue(4)
-    println(x.first == 4)
-    x.enqueue(5)
+    val queue = QueueMut(1, 2, 3)
+    println(queue.isFull)
+    println(queue.first == 1)
+    queue.dequeue
+    println(!queue.isFull)
+    println(!queue.isEmpty)
+    println(queue.first == 2)
+    queue.dequeue
+    println(queue.first == 3)
+    queue.dequeue
+    println(queue.isEmpty)
+    queue.enqueue(4)
+    println(queue.first == 4)
+    queue.enqueue(5)
+    val queueEmpty = QueueMut.empty[Int](10)
+    println(queueEmpty.isEmpty)
   }
 }
