@@ -58,3 +58,43 @@ object Zad2:
     println(Await.result(fut1.exists(x => x < 0), 2.second))
     println(Await.result(fut2.exists(x => x < 0), 2.second))
     println(Await.result(fut3.exists(x => x < 0), 2.second))
+
+object Zad3:
+
+  import scala.concurrent.*
+  import ExecutionContext.Implicits.global
+  import scala.util.{Success, Failure}
+  import scala.io.Source
+
+  def main(args: Array[String]): Unit =
+    val path = args(0)
+    val promiseOfFinalResult = Promise[Seq[(String, Int)]]
+
+    val future = scanFiles(path) flatMap processFiles
+    promiseOfFinalResult.completeWith(future)
+
+    promiseOfFinalResult.future onComplete {
+      case Success(result) => result foreach println
+      case Failure(t)
+      => t.printStackTrace()
+    }
+    Thread.sleep(500)
+  end main
+
+  private def processFiles(fileNames: Seq[String]): Future[Seq[(String, Int)]] =
+    Future.sequence(fileNames.map(fileName => processFile(fileName)))
+
+  private def processFile(fileName: String): Future[(String, Int)] =
+    Future {
+      val f = Source.fromFile(fileName)
+      try {
+        (fileName, f.getLines.foldLeft(0)((acc, line) => acc + line.split(' ').length))
+      } finally f.close()
+    }
+
+  private def scanFiles(docRoot: String): Future[Seq[String]] =
+    Future {
+      new java.io.File(docRoot).list.toIndexedSeq.map(docRoot + _)
+    }
+
+end Zad3
