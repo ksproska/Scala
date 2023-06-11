@@ -21,11 +21,13 @@ object GreeterMain:
   private def watching(actors: Int): Behavior[StartGuessing] =
     Behaviors.receiveSignal {
       case (context, Terminated(ref)) =>
-        context.log.info(s"Client stopped: ${ref.path.name}")
-        if actors > 1 then watching(actors - 1)
+        println(s"Client stopped: ${ref.path.name}")
+        if actors > 1
+        then
+          watching(actors - 1)
         else
-          context.log.info(s"The guardian '${context.self.path.name}' is stopping")
-        Behaviors.stopped
+          println(s"The guardian '${context.self.path.name}' is stopping")
+          Behaviors.stopped
     }
 
   def main(args: Array[String]): Unit =
