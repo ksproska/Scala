@@ -23,7 +23,7 @@ abstract class MyQueue[E]:
   override def toString: String
 
 
-class QueueMut[E: ClassTag](val size: Int = 1000) extends MyQueue[E] {
+class QueueMut[E: ClassTag] private(val size: Int = 1000) extends MyQueue[E] {
   private var firstInx: Int = 0
   private var endInx: Int = 0
   private val array_size = size + 1
@@ -35,12 +35,13 @@ class QueueMut[E: ClassTag](val size: Int = 1000) extends MyQueue[E] {
 
   override def enqueue(x: E): Unit =
     if isFull then throw new FullException("Queue is full")
-    queue(endInx) = x
-    endInx = (endInx + 1) % array_size
+    else
+      queue(endInx) = x
+      endInx = (endInx + 1) % array_size
 
   override def dequeue: Unit =
     if !isEmpty then
-//      queue(firstInx) = ClassTag.Null.asInstanceOf[E]
+      queue(firstInx) = null.asInstanceOf[E]
       firstInx = (firstInx + 1) % array_size
 
   override def first: E =
@@ -89,5 +90,10 @@ object lista8 {
     val queueEmpty = QueueMut.empty[Int](10)
     println(queueEmpty)
     println(queueEmpty.isEmpty)
+
+    val queueString = QueueMut("a", "b", "c")
+    println(queueString)
+    queueString.dequeue
+    println(queueString)
   }
 }

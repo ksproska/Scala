@@ -81,13 +81,10 @@ object Zad1c:
 
 // Zadanie 2
 object Zad2:
-  val DURATION_MIN = 100
-  val DURATION_MAX = 1000
-  private val N = 10
+  class Philosopher(name: String, leftUtil: Semaphore, rightUtil: Semaphore, doorman: Semaphore) extends Thread(name):
+    val DURATION_MIN = 100
+    val DURATION_MAX = 1000
 
-  val doorman = new Semaphore(N - 1, true)
-  val utils: Array[Semaphore] = new Array[Semaphore](N)
-  class Philosopher(name: String, leftUtil: Semaphore, rightUtil: Semaphore) extends Thread(name):
     def eat(): Unit =
       doorman.acquire()
       println(s"$name went inside")
@@ -116,8 +113,11 @@ object Zad2:
         eat()
 
   def main(args: Array[String]): Unit =
-    for (i <- 0 until N) utils(i) = new Semaphore(1, true)
+    val N = 10
+    val doorman = new Semaphore(N - 1, true)
+    val utils: Array[Semaphore] = new Array[Semaphore](N)
+    for i <- 0 until N do utils(i) = new Semaphore(1, true)
     for p <- 0 until N do
       val leftUtensil = utils(p)
       val rightUtensil = utils((p + 1) % N)
-      new Philosopher(s"Philosopher$p", leftUtensil, rightUtensil).start()
+      new Philosopher(s"Philosopher$p", leftUtensil, rightUtensil, doorman).start()

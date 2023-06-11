@@ -1,5 +1,6 @@
 // Kamila Sproska
 
+import java.awt.Taskbar.Feature
 import scala.concurrent.{Await, Future, Promise}
 import concurrent.ExecutionContext.Implicits.global
 import concurrent.duration.DurationInt
@@ -37,9 +38,7 @@ object Zad2:
     def existsProm(p: T => Boolean): Future[Boolean] =
       val prom = Promise[Boolean]
       self onComplete {
-        case Success(v) => if p(v)
-          then prom.success(true)
-          else prom.success(false)
+        case Success(v) => prom.success(p(v))
         case Failure(_) => prom.success(false)
       }
       prom.future
@@ -82,14 +81,14 @@ object Zad3:
   end main
 
   private def processFiles(fileNames: Seq[String]): Future[Seq[(String, Int)]] =
-    Future.sequence(fileNames.map(fileName => processFile(fileName)))
+    Future.sequence(fileNames.map(fileName => processFile(fileName))).map(tuples => tuples.sortBy(_._2))
 
   private def processFile(fileName: String): Future[(String, Int)] =
     Future {
-      val f = Source.fromFile(fileName)
-      try {
-        (fileName, f.getLines.foldLeft(0)((acc, line) => acc + line.split(' ').length))
-      } finally f.close()
+      val source = Source.fromFile(fileName)
+      try
+        (fileName, source.getLines.foldLeft(0)((acc, line) => acc + line.split(' ').length))
+      finally source.close()
     }
 
   private def scanFiles(docRoot: String): Future[Seq[String]] =
