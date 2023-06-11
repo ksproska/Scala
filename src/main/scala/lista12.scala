@@ -1,6 +1,40 @@
+// Kamila Sproska
+
 import akka.actor.typed.{ActorRef, ActorSystem, Behavior, Terminated}
 import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 
+// Zadanie 1
+object GreeterMain:
+  final case class StartGuessing(numbOfClients: Int, maxNumb: Int)
+
+  def apply(): Behavior[StartGuessing] =
+    Behaviors.receive[StartGuessing] { (context, message) =>
+      println(s"${context.self.path.name}. started guessing with ${message.numbOfClients} clients - max number: ${message.maxNumb}")
+      val server: ActorRef[Server.ClientGuess] = context.spawn(Server(message.maxNumb), "Server")
+
+      for i <- 1 to message.numbOfClients
+        do
+          context.watch(context.spawn(Client(message.maxNumb, server), s"Client$i"))
+      watching(message.numbOfClients)
+    }
+
+  private def watching(actors: Int): Behavior[StartGuessing] =
+    Behaviors.receiveSignal {
+      case (context, Terminated(ref)) =>
+        context.log.info(s"Client stopped: ${ref.path.name}")
+        if actors > 1 then watching(actors - 1)
+        else
+          context.log.info(s"The guardian '${context.self.path.name}' is stopping")
+        Behaviors.stopped
+    }
+
+  def main(args: Array[String]): Unit =
+    val greeterMain: ActorSystem[GreeterMain.StartGuessing] = ActorSystem(GreeterMain(), "Guardian")
+    greeterMain ! GreeterMain.StartGuessing(3, 10)
+
+end GreeterMain
+
+// Zadanie 2
 object Server:
   private val rand = new scala.util.Random
 
@@ -23,6 +57,7 @@ object Server:
     }
 end Server
 
+// Zadanie 3
 object Client:
   private val rand = new scala.util.Random
 
@@ -60,33 +95,3 @@ object Client:
     }
 
 end Client
-
-object GreeterMain:
-  final case class StartGuessing(numbOfClients: Int, maxNumb: Int)
-
-  def apply(): Behavior[StartGuessing] =
-    Behaviors.receive[StartGuessing] { (context, message) =>
-      println(s"${context.self.path.name}. started guessing with ${message.numbOfClients} clients - max number: ${message.maxNumb}")
-      val server: ActorRef[Server.ClientGuess] = context.spawn(Server(message.maxNumb), "Server")
-
-      for i <- 1 to message.numbOfClients
-        do
-          context.watch(context.spawn(Client(message.maxNumb, server), s"Client$i"))
-      watching(message.numbOfClients)
-    }
-
-  private def watching(actors: Int): Behavior[StartGuessing] =
-    Behaviors.receiveSignal {
-      case (context, Terminated(ref)) =>
-        context.log.info(s"Client stopped: ${ref.path.name}")
-        if actors > 1 then watching(actors - 1)
-        else
-          context.log.info(s"The guardian '${context.self.path.name}' is stopping")
-        Behaviors.stopped
-    }
-
-  def main(args: Array[String]): Unit =
-    val greeterMain: ActorSystem[GreeterMain.StartGuessing] = ActorSystem(GreeterMain(), "Guardian")
-    greeterMain ! GreeterMain.StartGuessing(3, 10)
-
-end GreeterMain
