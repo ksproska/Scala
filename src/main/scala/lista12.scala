@@ -51,10 +51,10 @@ object Server:
 
       Behaviors.receiveMessage { message =>
         if message.guessedValue == currentNumb
-        then message.replyTo ! Client.ServerInfo(Client.Equality.Equal)
+        then message.replyTo ! Client.ServerInfo.Equal
         else if message.guessedValue < currentNumb
-        then message.replyTo ! Client.ServerInfo(Client.Equality.TooSmall)
-        else message.replyTo ! Client.ServerInfo(Client.Equality.TooBig)
+        then message.replyTo ! Client.ServerInfo.TooSmall
+        else message.replyTo ! Client.ServerInfo.TooBig
         Behaviors.same
       }
     }
@@ -64,10 +64,8 @@ end Server
 object Client:
   private val rand = new scala.util.Random
 
-  enum Equality:
+  enum ServerInfo:
     case Equal, TooSmall, TooBig
-
-  final case class ServerInfo(equality: Equality)
 
   def apply(upper: Int, server: ActorRef[Server.ClientGuess]): Behavior[ServerInfo] =
     Behaviors.setup { context =>
@@ -78,15 +76,15 @@ object Client:
       def guessNumber(lower: Int, upper: Int, guessedNumber: Int): Behavior[ServerInfo] = {
         server ! Server.ClientGuess(context.self, guessedNumber)
         Behaviors.receiveMessage { message =>
-          message.equality match
-            case Equality.Equal =>
+          message match
+            case ServerInfo.Equal =>
               context.log.info(s"${context.self.path.name}. I guessed it! ${guessedNumber}")
               Behaviors.stopped
-            case Equality.TooBig =>
+            case ServerInfo.TooBig =>
               val nextTry = (guessedNumber - lower)/2 + lower
               context.log.info(s"${context.self.path.name}. Response: too big. I'm trying: $nextTry")
               guessNumber(lower, guessedNumber - 1, nextTry)
-            case Equality.TooSmall =>
+            case ServerInfo.TooSmall =>
               val nextTry = (upper - guessedNumber + 1)/2 + guessedNumber
               context.log.info(s"${context.self.path.name}. Response: to small. I'm trying: $nextTry")
               guessNumber(guessedNumber + 1, upper, nextTry)
