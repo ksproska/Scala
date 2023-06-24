@@ -355,5 +355,76 @@ To drzewo jest przydatne do testowania funkcji `lBreadth`, np.
 lBreadth(lTree(1)).take(20).toList == List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
 lBreadth(LEmpty).take(20).toList == List()
 ```
-## [Lista 7](/lista7.scala)
-### [Zad 1](/lista7.scala#L3)
+## [Lista 7](/src/main/scala/lista7.scala)
+Sygnatura
+```
+empty      : -> Queue
+enqueue    : Elem * Queue -> Queue
+first      : Queue -> Elem
+firstOption: Queue -> Option[Elem]
+dequeue    : Queue -> Queue
+isEmpty    : Queue -> bool
+```
+Aksjomaty
+```
+For all q:Queue, e1,e2: Elem
+isEmpty (enqueue (e1,q))               = false
+isEmpty (empty)                        = true
+dequeue (enqueue(e1,enqueue(e2,q)))    = enqueue(e1,dequeue(enqueue(e2,q)))
+dequeue (enqueue(e1,empty))            = empty
+dequeue (empty)                        = empty
+first (enqueue(e1,enqueue(e2,q)))      = first(enqueue(e2,q))
+first (enqueue(e1,empty))              = e1
+first (empty)                          = ERROR
+firstOption(enqueue(e1,enqueue(e2,q))) = firstOption(enqueue(e2,q))
+firstOption(enqueue(e1,empty))         = Some(e1)
+firstOption(empty)                     = None
+```
+### [Zad 1](/src/main/scala/lista7.scala#L3)
+Zdefiniuj klasę generyczną dla <ins>kowariantnej kolejki niemodyfikowalnej</ins>, reprezentowanej
+przez dwie listy. \
+W ten sposób reprezentowane są kolejki niemodyfikowalne w językach czysto
+funkcyjnych, a także w Scali (patrz dokumentacja). \
+_Wskazówka_. Wzoruj się na klasie dla stosu z wykładu 7 (str. 8 i 27) oraz dokumentacji
+`scala.collection.immutable.Queue` (zaimplementuj tylko metody z powyższej specyfikacji).
+Zdefiniuj obiekt towarzyszący z metodami `apply` i `empty`. \
+Utworzenie nowej kolejki ma być możliwe na cztery sposoby:
+```scala worksheet
+new MyQueue
+MyQueue()
+MyQueue.empty
+MyQueue('a', 'b', 'c')
+```
+
+Para list `([x1; x2; ...; x m], [y1; y2; ...; yn])` reprezentuje kolejkę `x1 x2 ... xm yn ... y2 y1`. Pierwsza lista
+reprezentuje początek kolejki, a druga – koniec kolejki. Elementy w drugiej liście są zapamiętane
+w odwrotnej kolejności, żeby wstawianie było wykonywane w czasie stałym (na początek listy). \
+`enqueue(y, q)` modyfikuje kolejkę następująco: `(xl, [y1; y2; ...; yn])  (xl, [y;y 1; y2; ...; yn])`. Elementy
+w pierwszej liście są pamiętane we właściwej kolejności, co umożliwia szybkie usuwanie pierwszego
+elementu. `dequeue(q)` modyfikuje kolejkę następująco: `([x1; x2; ...; xm], yl)  ([x2; ...; xm], yl)`. Kiedy
+pierwsza lista zostaje opróżniona, druga lista jest odwracana i wstawiana w miejsce pierwszej: \
+`([], [y1; y2; ...; yn ])  ([yn; ... y2; y1], [])`. Reprezentacja kolejki jest w postaci normalnej, jeśli nie
+wygląda tak: `([], [y1; y2 ; ...; yn ])` dla n1. Wszystkie operacje kolejki mają zwracać reprezentację
+w postaci normalnej, dzięki czemu pobieranie wartości pierwszego elementu nie spowoduje
+odwracania listy. Odwracanie drugiej listy po opróżnieniu pierwszej też może się wydawać
+kosztowne. Jeśli jednak oszacujemy nie koszt pesymistyczny (oddzielnie dla każdej operacji kolejki),
+ale koszt zamortyzowany (uśredniony dla całego czasu istnienia kolejki), to okaże się, że
+zamortyzowany koszt operacji wstawiania i usuwania z kolejki jest stały. Para list to
+najefektywniejsza reprezentacja kolejki niemutowalnej.
+
+### [Zad 2](/src/main/scala/lista7.scala#L40)
+```scala worksheet
+enum BT[+A]:
+    case Empty
+    case Node(elem: A, left: BT[A], right: BT[A])
+import BT.*
+```
+Dla drzew binarnych, zdefiniowanych powyżej, napisz funkcję `breadthBT[A] : BT[A] => List[A]`
+obchodzącą drzewo binarne wszerz i zwracającą listę wartości, przechowywanych w węzłach
+drzewa. Wykorzystaj kolejkę z zadania 1.
+
+## [Lista 8](/src/main/scala/lista8.scala)
+## [Lista 9](/src/main/scala/lista9.scala)
+## [Lista 10](/src/main/scala/lista10.scala)
+## [Lista 11](/src/main/scala/lista11.scala)
+## [Lista 12](/src/main/scala/lista12.scala)
