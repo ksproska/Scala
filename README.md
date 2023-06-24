@@ -166,20 +166,194 @@ splitAt (List('a','b','c','d','e')) (2) == (List('a', 'b'), List('c', 'd', 'e'))
 
 ## [Lista 4](/src/main/scala/lista4.sc)
 ### [Zad 1](/src/main/scala/lista4.sc#L3)
+Zdefiniuj swoją klasę dla modyfikowalnej pary polimorficznej `MyPair[A, B]`. Ma ona mieć dwa pola
+modyfikowalne `fst` i `snd` z odpowiednimi akcesorami i mutatorami, oraz metodę `toString`, zwracającą
+napis w formacie `(fst, snd)`.
+
 ### [Zad 2](/src/main/scala/lista4.sc#L14)
+Klasa `BankAccount` jest zdefiniowana następująco:
+```scala worksheet
+class BankAccount(initialBalance: Double):
+
+private var balance = initialBalance
+def checkBalance = balance
+def deposit(amount: Double) = {
+  balance += amount; balance
+}
+def withdraw(amount: Double) = {
+  balance -= amount; balance
+}
+override def toString = "%.2f".format(balance)
+```
+
+W podpunktach a) i b) należy utworzyć odpowiednie konto i przeprowadzić na nim testy.
+
+a) Zdefiniuj klasę `CheckingAccount`, rozszerzającą klasę `BankAccount`, w której pobierana jest opłata w
+wysokości 1$ za każdą wpłatę i wypłatę z konta. Zmodyfikuj odpowiednio metody `deposit` i `withdraw`.
+
+b) Zdefiniuj klasę `SavingsAccount`, rozszerzającą klasę `BankAccount`, w której co miesiąc do konta
+dodawane jest oprocentowanie 1%, a w przypadku debetu pobierana jest opłata w wysokości 1% . Nie
+chodzi tu o korzystanie z kalendarza. Dodaj metodę `earnMonthlyInterest: Unit`; jej użycie oznacza, że
+upłynął miesiąc. \
+Trzy transakcje miesięcznie są bezpłatne, za pozostałe pobierana jest opłata w wysokości 1$.
+Zmodyfikuj odpowiednio metody `deposit` i `withdraw`.
+
 ### [Zad 3](/src/main/scala/lista4.sc#L70)
+a) Zdefiniuj abstrakcyjną klasę `Zwierz`, z dokładnie jednym niemodyfikowalnym polem imie. Jej
+konstruktor(y) ma(ją) umożliwiać tworzenie zwierzęcia z domyślnym imieniem (np. „bez imienia”)
+lub z imieniem, podanym jako argument. \
+Klasa ma mieć cztery publiczne bezargumentowe metody: `imie`, `rodzaj`, `dajGlos` i `toString`, które
+odpowiednio zwracają: imię, rodzaj i charakterystyczny głos zwierzęcia. \
+Metoda `toString` ma zwracać informację o zwierzęciu w poniższym formacie: \
+`<rodzaj zwierzęcia> <imię zwierzęcia> daje głos <charakterystyczny głos zwierzęcia>!` \
+Na przykład (dla psa): \
+`Pies Kruczek daje głos Hau, hau!` \
+Zdecyduj, które metody muszą być abstrakcyjne.
+
+b) Zdefiniuj klasy publiczne dla kilku rodzajów zwierząt (co najmniej dwóch), dziedziczące
+z klasy `Zwierz`. Podobnie jak klasa `Zwierz` mają one umożliwiać tworzenie zwierzęcia na dwa sposoby:
+bez podanego imienia i z imieniem. **Nie wolno dodawać żadnych nowych pól ani metod!** Które
+metody trzeba zdefiniować, które zastąpić, a które odziedziczyć bez zmian?
+
+c) Napisz program testujący `TestZwierza` (jako obiekt singletonowy), w którym należy utworzyć
+kolekcję kilku zwierząt (użyj kolekcji `Vector`) i wypisać informacje o tych zwierzętach (wykorzystaj
+pętlę `for ... do`). Zaobserwuj efekt działania polimorfizmu inkluzyjnego i wiązania dynamicznego.
+W arkuszu elektronicznym (worksheet) program uruchamia się tak: `TestZwierza.main(Array())`
 
 ## [Lista 5](/src/main/scala/lista5.sc)
+Na wykładzie zostały zdefiniowane drzewa binarne:
+```scala worksheet
+enum BT[+A]:
+    case Empty
+    case Node(elem: A, left: BT[A], right: BT[A])
+```
+Po zaimportowaniu obiektu towarzyszącego `BT` można zdefiniować drzewo:
+```scala worksheet
+val t = Node(1, Node(2, Empty, Node(3, Empty, Empty)), Empty)
+```
 ### [Zad 1](/src/main/scala/lista5.sc#L3)
+Napisz funkcję `sumBT: BT[Int] => Int`, która oblicza sumę liczb całkowitych,
+przechowywanych w węzłach drzewa, np. 
+```scala worksheet
+sumBT(t) == 6
+```
 ### [Zad 2](/src/main/scala/lista5.sc#L25)
-### [Zad 3](/src/main/scala/lista5.sc#L37)
-### [Zad 4](/src/main/scala/lista5.sc#L73)
-### [Zad 5](/src/main/scala/lista5.sc#L83)
+Napisz funkcjonał
+```scala worksheet
+foldBT[A, B](f: A => (B, B) => B)(acc: B)(bt: BT[A]): B
+```
+uogólniający funkcję sumowania wartości z węzłów drzewa binarnego tak, jak funkcjonał
+`foldRight` uogólnia funkcję sumowania elementów listy. Typ `(B, B)` to typ pary akumulatorów dla
+lewego i prawego poddrzewa.
 
+### [Zad 3](/src/main/scala/lista5.sc#L37)
+Wykorzystaj `foldBT` do zdefiniowania:
+
+a) sumy liczb całkowitych `sumBTfold: BT[Int] => Int`, np. 
+```scala worksheet
+sumBTfold(t) == 6
+```
+b) listy wartości pamiętanych w węzłach drzewa w obejściu: \
+infiksowym - `inorderBTfold[A](bt: BT[A]): List[A]` \
+prefiksowym - `preorderBTfold[A](bt: BT[A]): List[A]` \
+postfiksowym - `postorderBTfold[A](bt: BT[A]): List[A]` \
+np. 
+```scala worksheet
+inorderBTfold(t) == List(2, 3, 1)
+preorderBTfold(t) == List(1, 2, 3)
+postorderBTfold(t) == List(3, 2, 1)
+```
+### [Zad 4](/src/main/scala/lista5.sc#L73)
+Wykorzystując `foldBT` zdefiniuj funkcjonał
+```scala worksheet
+mapBT[A, B](f: A => B)(bt: BT[A]): BT[B]
+```
+aplikujący daną funkcję do wartości we wszystkich węzłach drzewa.
+np. 
+```scala worksheet
+mapBT[Int, Int](v => 2 * v)(t) == Node(2,Node(4,Empty,Node(6,Empty,Empty)),Empty)
+```
+### [Zad 5](/src/main/scala/lista5.sc#L83)
+Na wykładzie zostały zdefiniowane grafy:
+```scala worksheet
+case class Graph[A](succ: A => List[A])
+```
+Napisz funkcję: `pathExists[A](g: Graph[A])(from: A, to: A): Boolean` sprawdzającą, czy istnieje
+droga pomiędzy zadanymi wierzchołkami grafu. np. dla poniższego grafu g:
+```scala worksheet
+val g = Graph((i: Int) =>
+  i match
+    case 0 => List(3)
+    case 1 => List(0, 2, 4)
+    case 2 => List(1)
+    case 3 => List(5)
+    case 4 => List(0, 2)
+    case 5 => List(3)
+    case n => throw new NoSuchElementException(s"Graph g: node $n doesn't exist")
+)
+pathExists(g)(4, 1)
+!pathExists(g)(0, 4)
+!pathExists(g)(3, 0)
+pathExists(g)(2,2)
+!pathExists(g)(0,0)
+```
 ## [Lista 6](/src/main/scala/lista6.sc)
 ### [Zad 1](/src/main/scala/lista6.sc#L4)
-### [Zad 2](/src/main/scala/lista6.sc#L18)
-### [Zad 3](/src/main/scala/lista6.sc#L35)
+Jedna z pętli w języku Scala 2 ma następującą składnię: `while (warunek) wyrażenie`, np.
+```scala worksheet
+var count = 0
+while (count < 5) {
+  println(count)
+  count += 1
+}
+```
+Napisz funkcję `whileLoop` (**bez używania efektów obliczeniowych**), która pobiera dwa
+argumenty: warunek oraz wyrażenie i dokładnie symuluje działanie pętli `while` (również
+składniowo). Jakiego typu (i dlaczego) muszą być argumenty i wynik funkcji? Przetestuj
+jej działanie, symulując powyższą pętlę.
 
+### [Zad 2](/src/main/scala/lista6.sc#L18)
+Napisz funkcję `lrepeat [A] (k: Int) (xsl: LazyList[A]): LazyList [A]`, która dla danej
+dodatniej liczby całkowitej `k` i listy leniwej `LazyList (x0, x1, x2, x3, ... )` zwraca listę leniwą,
+w której każdy element `xi` jest powtórzony `k` razy, np.
+```scala worksheet
+lrepeat(3)(LazyList('a','b','c','d')).toList == List('a', 'a', 'a', 'b', 'b', 'b', 'c', 'c', 'c', 'd', 'd', 'd')
+lrepeat(3)(LazyList.from(1)).take(15).toList == List(1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5)
+lrepeat(3)(LazyList()).take(15).toList == List()
+```
+### [Zad 3](/src/main/scala/lista6.sc#L35)
+Na wykładzie 5 zostały zdefiniowane polimorficzne drzewa binarne:
+```scala worksheet
+enum BT[+A]:
+    case Empty
+    case Node(elem: A, left: BT[A], right: BT[A])
+import BT.*
+val tt = Node(1,Node(2,Node(4,Empty,Empty),Empty),Node(3,Node(5,Empty,Node(6,Empty,Empty)),Empty))
+```
+Polimorficzne leniwe drzewa binarne można zdefiniować następująco:
+```scala worksheet
+enum lBT[+A]:
+    case LEmpty
+    case LNode(elem: A, left: () => lBT[A], right: () => lBT[A])
+```
+a) Napisz funkcję `lBreadth[A](ltree: lBT[A]): LazyList [A]`, która tworzy listę leniwą zawierającą
+wszystkie wartości węzłów danego leniwego drzewa binarnego. \
+_Wskazówka:_ zastosuj obejście drzewa wszerz, reprezentując kolejkę jako zwykłą listę.
+
+b) Wykorzystując `foldBT` z listy 5 zdefiniuj funkcję `BT2lBT[A](bt: BT[A]): lBT[A]`, konwertującą
+zwykłe drzewo binarne do leniwego drzewa binarnego. Wykorzystaj ją w testach funkcji
+funkcji `lBreadth`, 
+```scala worksheet
+lBreadth(BT2lBT(tt)).force == LazyList(1, 2, 3, 4, 5, 6)
+lBreadth(LEmpty) == LazyList()
+```
+c) Napisz funkcję `lTree(n: Int): lBT[Int]`, która dla zadanej liczby naturalnej `n` konstruuje
+nieskończone leniwe drzewo binarne z korzeniem o wartości `n` i z dwoma poddrzewami
+`lTree(2*n)` oraz `lTree(2*n+1)`. \
+To drzewo jest przydatne do testowania funkcji `lBreadth`, np.
+```scala worksheet
+lBreadth(lTree(1)).take(20).toList == List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)
+lBreadth(LEmpty).take(20).toList == List()
+```
 ## [Lista 7](/lista7.scala)
 ### [Zad 1](/lista7.scala#L3)
