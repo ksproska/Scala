@@ -3,7 +3,7 @@
 // Zad 1
 import java.util.concurrent.Semaphore
 import scala.annotation.tailrec
-object Zad1:
+object Zad1_9:
   var counter = 0 // counter variable
   def readWriteCounter: Unit =
     counter += 1
@@ -27,7 +27,7 @@ object Zad1:
 
 
 // b
-object Zad1b:
+object Zad1b_9:
   var counter = 0 // counter variable
   def readWriteCounter: Unit =
     this.synchronized {
@@ -46,7 +46,7 @@ object Zad1b:
 
 
 // c
-object Zad1c:
+object Zad1c_9:
   val semaphore = new Semaphore(1)
   var counter = 0 // counter variable
   def readWriteCounter: Unit =
@@ -66,7 +66,7 @@ object Zad1c:
 
 
 // Zad 2
-object Zad2:
+object Zad2_9:
   def parallel[A, B](block1: => A, block2: => B): (A, B) =
     var a: Option[A] = None
     var b: Option[B] = None
@@ -86,7 +86,7 @@ object Zad2:
 
 
 // Zad 3
-object Zad3:
+object Zad3_9:
   def periodically(duration: Long, times: Int)(block: => Unit): Unit =
     @tailrec
     def inner(times: Int): Unit =

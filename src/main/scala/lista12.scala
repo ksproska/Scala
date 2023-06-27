@@ -5,6 +5,7 @@ import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
 
 // Zadanie 1
 object GuesserMain:
+  // a
   final case class StartGuessing(numbOfClients: Int, maxNumb: Int)
 
   def apply(): Behavior[StartGuessing] =
@@ -17,6 +18,7 @@ object GuesserMain:
       watching(message.numbOfClients)
     }
 
+  // b
   private def watching(actors: Int): Behavior[StartGuessing] =
     Behaviors.receiveSignal {
       case (context, Terminated(ref)) =>

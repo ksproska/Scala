@@ -424,7 +424,23 @@ obchodzącą drzewo binarne wszerz i zwracającą listę wartości, przechowywan
 drzewa. Wykorzystaj kolejkę z zadania 1.
 
 ## [Lista 8](/src/main/scala/lista8.scala)
+### [Zad 1](/src/main/scala/lista8.scala#L3)
+
 ## [Lista 9](/src/main/scala/lista9.scala)
+### [Zad 1](/src/main/scala/lista9.scala#L3)
+### [Zad 2](/src/main/scala/lista9.scala#L68)
+### [Zad 3](/src/main/scala/lista9.scala#L88)
+
 ## [Lista 10](/src/main/scala/lista10.scala)
+### [Zad 1](/src/main/scala/lista10.scala#L9)
+### [Zad 2](/src/main/scala/lista10.scala#L82)
+
 ## [Lista 11](/src/main/scala/lista11.scala)
+### [Zad 1](/src/main/scala/lista11.scala#L9)
+### [Zad 2](/src/main/scala/lista11.scala#L36)
+### [Zad 3](/src/main/scala/lista11.scala#L61)
+
 ## [Lista 12](/src/main/scala/lista12.scala)
+### [Zad 1](/src/main/scala/lista12.scala#L6)
+### [Zad 2](/src/main/scala/lista12.scala#L42)
+### [Zad 3](/src/main/scala/lista12.scala#L65)

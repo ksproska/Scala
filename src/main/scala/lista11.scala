@@ -6,7 +6,7 @@ import concurrent.ExecutionContext.Implicits.global
 import concurrent.duration.DurationInt
 import scala.util.{Failure, Success}
 
-object Zad1a:
+object Zad1a_11:
   def pairFutZip[A, B](fut1: Future[A], fut2: Future[B]): Future[(A, B)] = fut1 zip fut2
 
   def pairFut[A, B](fut1: Future[A], fut2: Future[B]): Future[(A, B)] =
@@ -33,7 +33,7 @@ object Zad1a:
     println(Await.result(result4, 2.seconds))
 
 
-object Zad2:
+object Zad2_11:
   extension [T](self: Future[T])
     def existsProm(p: T => Boolean): Future[Boolean] =
       val prom = Promise[Boolean]
@@ -58,7 +58,7 @@ object Zad2:
     println(Await.result(fut2.exists(x => x < 0), 2.second))
     println(Await.result(fut3.exists(x => x < 0), 2.second))
 
-object Zad3:
+object Zad3_11:
 
   import scala.concurrent.*
   import ExecutionContext.Implicits.global
@@ -96,4 +96,5 @@ object Zad3:
       new java.io.File(docRoot).list.toIndexedSeq.map(docRoot + _)
     }
 
-end Zad3
+end Zad3_11
+
