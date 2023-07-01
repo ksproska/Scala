@@ -389,8 +389,9 @@ _Wskazówka_. Wzoruj się na klasie dla stosu z wykładu 7 (str. 8 i 27) oraz do
 `scala.collection.immutable.Queue` (zaimplementuj tylko metody z powyższej specyfikacji).
 Zdefiniuj obiekt towarzyszący z metodami `apply` i `empty`. \
 Utworzenie nowej kolejki ma być możliwe na cztery sposoby:
+
 ```scala worksheet
-new MyQueue
+new MyQueue2
 MyQueue()
 MyQueue.empty
 MyQueue('a', 'b', 'c')
@@ -425,22 +426,286 @@ drzewa. Wykorzystaj kolejkę z zadania 1.
 
 ## [Lista 8](/src/main/scala/lista8.scala)
 ### [Zad 1](/src/main/scala/lista8.scala#L3)
+Dana jest następująca klasa abstrakcyjna dla generycznych kolejek modyfikowalnych.
+```scala worksheet
+class FullException(msg: String) extends Exception(msg)
+
+abstract class MyQueue[E]
+
+@throws[FullException]
+def enqueue(x: E): Unit
+def dequeue: Unit
+
+@throws[NoSuchElementException]
+def first: E
+def isEmpty: Boolean
+def isFull: Boolean
+override def toString: String // = array.mkString("Array(", ", ", ")")
+```
+
+a) Napisz klasę generyczną `QueueMut`, rozszerzającą powyższą klasę abstrakcyjną,
+w której kolejka jest implementowana przez **tablicę cykliczną** (wszystkie operacje na
+indeksach tablicy cyklicznej są wykonywane modulo rozmiar tablicy). Implementacja
+ma być zgodna z poniższym rysunkiem, czyli rozmiar tablicy musi być o 1 większy od
+pojemności kolejki (dzięki temu indeksy f oraz r wystarczą do sprawdzenia, czy
+kolejka jest pusta czy pełna). Metoda `dequeue` dla pustej kolejki ma pozostawiać
+pustą kolejkę.
+
+b) Zdefiniuj obiekt towarzyszący z metodami:
+```scala worksheet
+def apply[E: ClassTag](xs: E*): QueueMut[E] = ???
+def empty[E: ClassTag](capacity: Int = 1000) : QueueMut[E] = ???
+```
+Przeprowadź testy na **małej** kolejce, którą **całkowicie** zapełnisz. Przetestuj przejście przez
+„sklejenie” tablicy.Wszystkie definicje oraz proste testy w obiekcie singletonowym `Lista8`
+z metodą main umieść w pliku `Lista8.scala`.
+
+**Uwaga.** Tablice w języku Java nie mogą być generyczne (wykład 7, str. 36). W Scali jest to
+jednak możliwe, ale w czasie tworzenia tablicy generycznej potrzebna jest informacja
+o _wytartym_ typie elementów tej tablicy. Można to zrobić, wykorzystując znacznik typu (ang.
+class tag), który sam jest typu _scala.reflect.ClassTag_ (wykład 7, str. 38), co jest zilustrowane
+poniżej:
+```scala worksheet
+import reflect.ClassTag
+class QueueMut[E: ClassTag] private(val capacity: Int = 1000)
+extends MyQueue[E]
+```
 
 ## [Lista 9](/src/main/scala/lista9.scala)
 ### [Zad 1](/src/main/scala/lista9.scala#L3)
+Przeanalizuj poniższy program. Dwa wątki zwiększają 200 000 razy wspólny licznik o 1.
+Po ich zakończeniu wartość licznika powinna oczywiście wynosić 400 000. Uruchom ten
+program kilka razy.
+```scala worksheet
+object Zad1:
+  var counter = 0 // counter variable
+  
+  def readWriteCounter(): Unit =
+    counter += 1
+
+  def main(args: Array[String]): Unit =
+    val p = new Thread(() => for _ <- 0 until 200000 do readWriteCounter)
+    val q = new Thread(() => for _ <- 0 until 200000 do readWriteCounter)
+    val startTime = System.nanoTime
+    p.start; q.start
+    p.join; q.join
+    val estimatedTime = (System.nanoTime - startTime) / 1000000
+    println(s"Value of the counter = $counter")
+    println(s"Estimated time = ${estimatedTime}ms, Available processors = ${Runtime.getRuntime.availableProcessors}")
+```
+
+a) Jak wyjaśnisz różne wartości licznika? W wyjaśnieniu załóż, że mamy tylko jeden procesor,
+więc nie ma akcji jednoczesnych.Wskaż fragment kodu, który jest źródłem problemów.
+Odpowiedź należy umieścić w postaci komentarza na początku pliku `Lista9.scala`.
+
+b) Popraw powyższy program, wykorzystując mechanizm kodu synchronizowanego (blokada
+wewnętrzna, monitory).
+
+c) Popraw powyższy program, wykorzystując mechanizm semaforów (klasa
+_java.util.concurrent.Semaphore_).
+
 ### [Zad 2](/src/main/scala/lista9.scala#L68)
+Zaimplementuj metodę parallel, która jako argumenty bierze dwa bloki kodu, wykonuje je
+jednocześnie w osobnych wątkach i zwraca wyniki ich obliczeń w postaci pary.
+```scala worksheet
+def parallel[A, B](block1: =>A, block2: =>B): (A, B) = ???
+```
+
+Przykładowe testy:
+```s'
+assert(parallel("a"+1, "b"+2) == ("a1", "b2"))
+println(parallel(Thread.currentThread.getName, Thread.currentThread.getName))
+```
+
 ### [Zad 3](/src/main/scala/lista9.scala#L88)
+Zaimplementuj metodę `periodically`, która jako argumenty bierze interwał czasowy duration
+(w milisekundach), maksymalną liczbę powtórzeń times oraz blok kodu block. Metoda
+tworzy wątek demona, który wykonuje podany blok kodu z pauzami trwającymi `duration`
+milisekund, maksymalnie `times` razy.
+```scala worksheet
+def periodically(duration: Long, times: Int)(block: => Unit): Unit = ???
+```
+Test (na końcu metody main) ma wyglądać tak:
+```scala worksheet
+periodically(1000, 5){print("y ")}
+periodically(1000, 25){print("x ")}
+Thread.sleep(10000)
+println("Done sleeping")
+```
+Uruchom ten program kilka razy. Wynik powinien być taki (z dokładnością do przeplotu): \
+`y x y x x y x y x y x x x x x Done sleeping`
+
+Dlaczego `x` nie zostało wyświetlone 25 razy?
 
 ## [Lista 10](/src/main/scala/lista10.scala)
 ### [Zad 1](/src/main/scala/lista10.scala#L9)
+Na wykładzie 9 (str. 44-45) był przedstawiony program producent/konsument
+z ograniczonym buforem cyklicznym.
+
+a) Przepisz ten program, wykorzystując zamiast klasy `BoundedBuffer` klasę biblioteczną
+_java.util.concurrent.ArrayBlockingQueue_.
+
+b) W programie z podpunktu a) utwórz kilka producentów i konsumentów. Nadaj im unikatowe nazwy, np. Producer1, Consumer1 itd. Do wyświetlania informacji użyj
+metodę `log` (patrz programy z wykładu 10).W jednym z testów utwórz dwa producenty
+i trzy konsumenty. Dlaczego program się nie kończy? Odpowiedź umieść w
+komentarzu.
+
+c) Z programu w podpunkcie b) usuń definicje klas `Producer` i `Consumer`. Wykorzystaj
+`ExecutionContext` do wykonywania odpowiadających im zadań. W jednym z testów
+utwórz dwa producenty i trzy konsumenty. Dlaczego program się kończy? Odpowiedź
+umieść w komentarzu.
+
 ### [Zad 2](/src/main/scala/lista10.scala#L82)
+Napisz program, rozwiązujący problem ucztujących filozofów (wykład 9, str. 40) dla N
+filozofów za pomocą semaforów (_java.util.concurrent.Semaphore_). Rozwiązanie powinno
+spełniać następujące warunki:
+1. Każdy filozof ma stałe miejsce przy stole. Filozof je tylko wtedy, gdy ma dwie pałeczki.
+2. Dwóch filozofów nie może jednocześnie trzymać tej samej pałeczki.
+3. Nie występuje blokada (sytuacja patowa). Może ona wystąpić np. wtedy, gdy wszyscy filozofowie
+   podniosą lewe pałeczki i będą czekać na zwolnienie prawych.
+4. Nikt nie może być zagłodzony. Oczywista z pozoru strategia, polegająca na poczekaniu, aż obie
+   pałeczki będą wolne, może spowodować zagłodzenie dwóch filozofów (dlaczego?).
+5. Żaden z filozofów nie zajmuje się tylko jedzeniem. Po zakończeniu posiłku każdy odkłada
+   pałeczki i wraca do sali medytacji.
+6. Filozofowie podnoszą i odkładają pałeczki po jednej naraz.
+7. Nie można wyróżniać żadnego z filozofów (algorytmy ich działania powinny być takie same).
+   
+Jedno z rozwiązań zakłada, że na początku wszyscy filozofowie medytują w przeznaczonej do
+tego sali, natomiast posiłki spożywają w jadalni. Należy zaangażować odźwiernego,
+pilnującego drzwi jadalni i pozwalającego przebywać w niej jednocześnie co najwyżej N-1
+filozofom. Dzięki temu co najmniej dwom filozofom, siedzącym przy stole, brakuje co
+najmniej jednego sąsiada, a zatem co najmniej jeden filozof może jeść.
+Każdy filozof ma wyświetlać odpowiednie komunikaty, informujące o: czasie medytacji,
+wejściu do jadalni, czasie jedzenia, wyjściu z jadalni.
+
+_Wskazówka._ Przedstaw filozofów jako wątki (każdy filozof w pętli naprzemiennie medytuje i posila
+się), sekcją krytyczną jest jedzenie, a zasobami dzielonymi są pałeczki do ryżu. Wątki są
+ponumerowane od 0 do N-1 (co odpowiada stałym miejscom filozofów przy stole( i wykonują się
+współbieżnie. Użycie każdej pałeczki jest kontrolowane przez semafor binarny, a odźwierny jest
+reprezentowany przez semafor ogólny z wartością początkową N-1.
 
 ## [Lista 11](/src/main/scala/lista11.scala)
 ### [Zad 1](/src/main/scala/lista11.scala#L9)
+Zdefiniuj dwie funkcje (`pairFut` i `pairFutZip`) z taką samą funkcjonalnością:
+```scala worksheet
+def pairFut[A, B] (fut1: Future[A], fut2: Future[B]): Future[(A, B)] = ???
+```
+a) Wykorzystaj metodę `zip` (wykład 11, str. 18) – w metodzie `def pairFutZip`
+
+b) Wykorzystaj `for` (wykład 11, str. 19) ) – w metodzie `def pairFut`
+
 ### [Zad 2](/src/main/scala/lista11.scala#L36)
+Do typu `Future[T]` dodaj dwie metody (`exists` i `existsProm`) z taką samą funkcjonalnością::
+```scala worksheet
+def exists(p: T => Boolean): Future[Boolean] = ???
+```
+Wynikowy obiekt `Future` ma zawierać wartość `true` wtedy i tylko wtedy, kiedy obliczenia obiektu
+oryginalnego kończą się pomyślnie i predykat p dla obliczonej wartości zwraca wartość `true`,
+w przeciwnym razie wynikowy obiekt `Future` ma zawierać wartość `false`. Wykorzystaj mechanizm
+metod rozszerzających (wykład 11, str. 28).
+
+a) Wykorzystaj promesę – w metodzie `existsProm`
+
+b) Nie korzystaj z promesy (użyj `map`) – w metodzie `exists`
+
+Przeprowadź trzy testy: kiedy predykat jest spełniony, kiedy predykat nie jest spełniony,
+kiedy rzucany jest wyjątek.
+
 ### [Zad 3](/src/main/scala/lista11.scala#L61)
+Należy policzyć liczbę słów w każdym pliku tekstowym zadanego folderu i wydrukować
+wynik w postaci par (nazwa pliku, liczba słów), posortowanych niemalejąco względem liczby
+słów. Możemy założyć dla uproszczenia, że słowa są oddzielone spacjami (wykorzystaj
+metodę `split`). Obliczenia należy przeprowadzać asynchronicznie. Pliki testowe są w folderze
+_Zad3pliki_. Program ma być napisany funkcyjnie. Poniżej jest jego schemat (plik _Zad3szablon.scala_).
+```scala
+object Zad3:
+    import scala.concurrent.*
+    import ExecutionContext.Implicits.global
+    import scala.util.{Success, Failure}
+    import scala.io.Source
+    def main(args: Array[String]): Unit =
+        //ścieżka do folderu, pobierana z wiersza poleceń, np. "C:/lista11/pliki/” lub "C:\\lista11\\pliki\\”
+        val path = args(0)
+        val promiseOfFinalResult = Promise[Seq[(String, Int)]]() // Promesa jest wyłącznie z powodów dydaktycznych
+        // Tu oblicz promiseOfFinalResult
+        promiseOfFinalResult.future onComplete {
+            case Success(result) => result foreach println
+            case Failure(t)
+            => t.printStackTrace
+        }
+        Thread.sleep(500)
+    end main
+    // Oblicza liczbę słów w każdym pliku z sekwencji wejściowej
+    private def processFiles(fileNames: Seq[String]): Future[Seq[(String, Int)]] = ???
+    // Wskazówka. Wykorzystaj Future.sequence(futures)
+    // Oblicza liczbę słów w podanym pliku i zwraca parę: (nazwa pliku, liczba słów)
+    private def processFile(fileName: String): Future[(String, Int)] = ???
+    // Zwraca sekwencję nazw plików z folderu docRoot
+    private def scanFiles(docRoot: String): Future[Seq[String]] =
+      Future { new java.io.File(docRoot).list.toIndexedSeq.map(docRoot + _) }
+end Zad3
+```
 
 ## [Lista 12](/src/main/scala/lista12.scala)
+Napisz kompletną aplikację (w stylu funkcyjnym, nie wolno używać `var`), w której klienty
+zgadują liczbę, wylosowaną przez serwer. Wzoruj się na przykładach „klient/serwer”
+i „wykorzystanie sygnałów” z wykładu.
+
 ### [Zad 1](/src/main/scala/lista12.scala#L6)
+a) Napisz aktora dla strażnika systemu aktorów. Strażnik użytkownika po
+otrzymaniu komunikatu `StartGuessing`, który zawiera liczbę klientów (co najmniej
+dwa) i górną granicę przedziału zgadywania, ma utworzyć instancję serwera
+i instancje klientów, zgadujących liczbę wylosowaną przez serwer.
+```scala worksheet
+def apply(): Behavior[StartGuessing] = ???
+```
+b) Dodaj obsługę zakończenia. Po zakończeniu działania przez wszystkie klienty
+(sygnały `Terminated`) strażnik ma wyprowadzić odpowiednie komunikaty
+i zakończyć swoje działanie, a tym samym działanie systemu aktorów.
+
 ### [Zad 2](/src/main/scala/lista12.scala#L42)
+Napisz aktora dla serwera (`server: ActorRef[Server.ClientGuess]`), który generuje
+losowo liczbę całkowitą z przedziału [0 .. N] (N > 1 ma być parametrem metody
+`apply` serwera), zapisuje w dzienniku odpowiednią informację i czeka na
+komunikaty od klientów, które próbują zgadnąć tę liczbę. Po otrzymaniu
+komunikatu serwer wysyła odpowiedź z informacją, czy liczba klienta była
+mniejsza, większa czy równa liczbie wylosowanej.
+```scala worksheet
+def apply(upper: Int): Behavior[ClientGuess] = ???
+```
+
 ### [Zad 3](/src/main/scala/lista12.scala#L65)
+Napisz aktora dla klienta zgadującego liczbę, wylosowaną przez serwer. Próby
+klienta powinny być optymalne (wyszukiwanie binarne) z wyjątkiem pierwszej
+próby, która ma być losowa. Klient ma zapisywać w dzienniku informacje,
+umożliwiające śledzenia działania aplikacji (patrz przykład poniżej). Po
+odgadnięciu liczby klient ma zapisać odpowiedni komunikat i zakończyć swoje
+działanie.
+```scala worksheet
+def apply(upper: Int, server: ActorRef[Server.ClientGuess]): Behavior[ServerInfo] = ?
+```
+
+
+W poniższym przykładowym przebiegu zostały pominięte informacje, dodawane przez
+dziennik (ang. logger). Komunikaty serwera i klienta mają być takie, jak poniżej.
+```text
+Client1. Started
+Server. Guess my number from the interval [0..100]      <- od serwera
+Client2. Started
+Client1. First random try = 30
+Client2. First random try = 99
+Client1. Response: too big. I'm trying: 14
+Client2. Response: too big. I'm trying: 49
+Client1. Response: too small. I'm trying: 22
+Client2. Response: too big. I'm trying: 24
+Client1. Response: too big. I'm trying: 18
+Client2. Response: too big. I'm trying: 11
+Client1. Response: too small. I'm trying: 20
+Client2. Response: too small. I'm trying: 17
+Client1. Response: too small. I'm trying: 21
+Client2. Response: too small. I'm trying: 20
+Client1. I guessed it! 21
+Client2. Response: too small. I'm trying: 22
+Client2. Response: too big. I'm trying: 21
+Client2. I guessed it! 21
+```
