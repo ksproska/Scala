@@ -391,7 +391,7 @@ Zdefiniuj obiekt towarzyszący z metodami `apply` i `empty`. \
 Utworzenie nowej kolejki ma być możliwe na cztery sposoby:
 
 ```scala worksheet
-new MyQueue2
+new MyQueue
 MyQueue()
 MyQueue.empty
 MyQueue('a', 'b', 'c')
