@@ -709,3 +709,53 @@ Client2. Response: too small. I'm trying: 22
 Client2. Response: too big. I'm trying: 21
 Client2. I guessed it! 21
 ```
+
+## [Lista 13](lista13/src/main/scala/lista13.scala)
+### [Zad 1](lista13/src/main/scala/lista13.scala#L6)
+Zdefiniuj obiekt Observable, emitujący zdarzenie co 5 sekund i co 12 sekund, ale nie
+wtedy, kiedy czas jest wielokrotnością 30 sekund. Emitowane zdarzenia to: `5, 10, 12, 15,
+20, 24, 25, 35, 36, 40 itd.` Zakończ działanie obserwabli po wyemitowaniu 15 zdarzeń.
+
+a) Zdefiniuj dwie obserwable. Jedna emituje zdarzenie co 5 sekund, a druga co 12 sekund
+i utwórz z nich jedną za pomocą metody `merge`. \
+Subskrybent ma wyświetlać zdarzenia w poniższym formacie (nazwy wątków należy
+dodać przy wyświetlaniu):
+```txt
+RxComputationScheduler-1: 5
+RxComputationScheduler-1: 10
+RxComputationScheduler-2: 12
+RxComputationScheduler-1: 15
+RxComputationScheduler-1: 20
+RxComputationScheduler-2: 24
+RxComputationScheduler-1: 25
+RxComputationScheduler-1: 35
+RxComputationScheduler-2: 36
+RxComputationScheduler-1: 40
+RxComputationScheduler-1: 45
+RxComputationScheduler-2: 48
+RxComputationScheduler-1: 50
+RxComputationScheduler-1: 55
+RxComputationScheduler-1: 65
+RxComputationScheduler-1: Observable completed
+```
+b) Zrób to samo, definiując tylko jedną obserwablę (wykorzystaj metodę `filter`). \
+Oto początek przykładowego wydruku. Zauważ, że teraz wykorzystywany jest tylko
+jeden wątek.
+```txt
+RxComputationScheduler-1: 5
+RxComputationScheduler-1: 10
+RxComputationScheduler-1: 12
+RxComputationScheduler-1: 15
+RxComputationScheduler-1: 20
+RxComputationScheduler-1: 24
+RxComputationScheduler-1: 25
+RxComputationScheduler-1: 35
+RxComputationScheduler-1: 36
+RxComputationScheduler-1: 40
+RxComputationScheduler-1: 45
+RxComputationScheduler-1: 48
+RxComputationScheduler-1: 50
+RxComputationScheduler-1: 55
+RxComputationScheduler-1: 65
+RxComputationScheduler-1: Observable completed
+```
