@@ -7,7 +7,7 @@ import scala.runtime.Null$
 
 class FullException(msg: String) extends Exception(msg)
 
-abstract class MyQueue[E]:
+abstract class MyQueue_8[E]:
   @throws[FullException]
   def enqueue(x: E): Unit
 
@@ -23,7 +23,7 @@ abstract class MyQueue[E]:
   override def toString: String
 
 
-class QueueMut[E: ClassTag] private(val size: Int = 1000) extends MyQueue[E] {
+class QueueMut[E: ClassTag] private(val size: Int = 1000) extends MyQueue_8[E] {
   private var firstInx: Int = 0
   private var endInx: Int = 0
   private val array_size = size + 1
