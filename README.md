@@ -1,4 +1,15 @@
-# Wszystkie listy:
+# Programowanie współbieżne i funkcyjne
+Poniżej znajdują się treści zadań wraz z linkami do ich rozwiązań w ramach przedmiotu
+**Programowanie współbieżne i funkcyjne** (_ang. Concurrent and functional programming_). \
+Każdy z nagłówków treści zadania linkuje do odpowiedniego pliku z rozwiązaniem. \
+Enjoy... Or rather help yourself :wink:
+
+### Programowanie współbieżne i funkcyjne vs Paradygmaty programowania
+Jako weteran kierunku Informatyka stosowana mogę stwierdzić, że część zadań
+z kursu **Programowanie współbieżne i funkcyjne** (z magisterki)
+było również danych w ramach zadań laboratoryjnych na przedmiocie **Paradygmaty programowania** (z inżynierki).
+Z tego względu linkuję to repozytorium również w ramach tego przedmiotu,
+jednak podkreślam, że <ins>nie wszystkie zadania będą się pokrywać</ins>.
 
 ## [Lista 0](/src/main/scala/lista0.sc)
 ### [Zad 1](/src/main/scala/lista0.sc#L3)
